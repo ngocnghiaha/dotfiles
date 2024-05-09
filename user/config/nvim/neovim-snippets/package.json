@@ -1,0 +1,31 @@
+{
+    "name": "neovim-snippets`",
+    "contributes": {
+        "snippets": [
+            {
+                "language": [
+					"javascript",
+					"javascriptreact"
+				],
+                "path": "./snippets/javascript.json"
+            },
+            {
+                "language": [
+					"typescript",
+					"typescriptreact"
+				],
+                "path": "./snippets/typescript.json"
+            },
+            {
+                "language": [
+					"html",
+					"javascript",
+					"javascriptreact",
+					"typescript",
+					"typescriptreact"
+				],
+                "path": "./snippets/html.json"
+            }
+        ]
+    }
+}

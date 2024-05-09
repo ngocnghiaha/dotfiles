@@ -1,0 +1,45 @@
+diff --git a/data/theme/gnome-shell-sass/widgets/_login-lock.scss b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+index 4dc9aec..80ba59b 100644
+--- a/data/theme/gnome-shell-sass/widgets/_login-lock.scss
++++ b/data/theme/gnome-shell-sass/widgets/_login-lock.scss
+@@ -1,4 +1,4 @@
+-$_gdm_bg: $system_base_color;
++$_gdm_bg: transparentize(white, 0.8);
+ $_gdm_fg: $system_fg_color;
+ $_gdm_dialog_width: 25em;
+ 
+@@ -23,6 +23,7 @@ $_gdm_dialog_width: 25em;
+ .login-dialog {
+   .login-dialog-prompt-entry {
+     @extend %system_entry;
++    background: $_gdm_bg !important;
+   }
+ }
+ 
+@@ -147,11 +148,11 @@ $_gdm_dialog_width: 25em;
+     .login-dialog-user-list-item {
+       // use button styling
+       @extend %button_common;
+-      @include button(normal, $tc:$_gdm_fg, $c:$system_base_color, $always_dark: true);
++      @include button(normal, $tc:$_gdm_fg, $c:$selected_bg_color, $always_dark: true);
+       &:selected,
+-      &:focus { @include button(focus, $tc:$_gdm_fg, $c:$system_base_color, $always_dark: true);}
+-      &:hover { @include button(hover, $tc:$_gdm_fg, $c:$system_base_color, $always_dark: true);}
+-      &:active { @include button(active, $tc:$_gdm_fg, $c:$system_base_color, $always_dark: true);}
++      &:focus { @include button(focus, $tc:$_gdm_fg, $c:$selected_bg_color, $always_dark: true);}
++      &:hover { @include button(hover, $tc:$_gdm_fg, $c:$selected_bg_color, $always_dark: true);}
++      &:active { @include button(active, $tc:$_gdm_fg, $c:$selected_bg_color, $always_dark: true);}
+ 
+       border-radius: $modal_radius;
+       padding: $base_padding * 1.5;
+@@ -202,6 +203,10 @@ $_gdm_dialog_width: 25em;
+ 
+ #lockDialogGroup {
+   background-color: $_gdm_bg;
++  background-image: url(file:///etc/nixos/gdm/gdm.jpg);
++  background-size: cover;
++  background-repeat: no-repeat;
++  background-position: center center;
+ }
+ 
+ // Clock
