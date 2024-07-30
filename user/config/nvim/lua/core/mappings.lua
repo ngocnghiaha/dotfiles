@@ -2,77 +2,44 @@ local lsp_buf = vim.lsp.buf
 local diagnostic = vim.diagnostic
 local telescope_builtin = require("telescope.builtin")
 local telescope_extensions = require("telescope").extensions
+local map = vim.keymap.set
 
 local M = {}
 
-M.file_actions = {
-  mappings = {
-    f = {
-      name = "File",
-      f = { telescope_builtin.find_files, "Find file" },
-      o = { telescope_builtin.oldfiles, "Old file" },
-      g = { telescope_builtin.live_grep, "Grep file" },
-      b = { telescope_extensions.file_browser.file_browser, "File browser" },
-      e = { "<CMD>Neotree toggle<CR>", "File explore" },
-    },
-    p = { '<cmd>%!prettier --stdin-filepath %<cr>', "Prettier formatting" },
-  },
-  options = {
-    mode = 'n',
-    prefix = "<leader>",
-  }
-}
+M.general = function()
+  map({ "n" }, "<leader>ff", telescope_builtin.find_files, { desc = "Find file" })
+  map({ "n" }, "<leader>fo", telescope_builtin.oldfiles, { desc = "Old file" })
+  map({ "n" }, "<leader>fg", telescope_builtin.live_grep, { desc = "Grep file" })
+  map({ "n" }, "<leader>fb", telescope_extensions.file_browser.file_browser, { desc = "File browser" })
+  map({ "n" }, "<leader>fe", "<CMD>Neotree toggle<CR>", { desc = "File explorer" })
 
-M.utilities = {
-  mappings = {
-    ["<C-c>"] = { "\"+y", "Copy" },
-    ["<C-v>"] = { "\"+p", "Paste" },
-    ["<F6>"] = { '<CMD>ToggleTerm<CR>', "Terminal" }
-  },
-  options = {
-    mode = { 'n', 'v', 's' }
-  }
-}
+  map({ "n", "v", "s" }, "<C-c>", "\"+y", { desc = "Copy" })
+  map({ "n", "v", "s" }, "<C-v>", "\"+p", { desc = "Paste" })
+  map({ "n", "v", "s" }, "<F6>", "<CMD>ToggleTerm<CR>", { desc = "Terminal" })
+end
 
-M.lsp = {
-  mappings = {
-    gD = { lsp_buf.declaration, "Declaration" },
-    gd = { lsp_buf.definition, "Definition" },
-    K = { lsp_buf.hover, "Hover document" },
-    gi = { lsp_buf.implementation, "Implementation" },
-    ["<C-k>"] = { lsp_buf.signature_help, "Signature help" },
+M.lsp = function(args)
+  local buf = args.buf
+  map({ "n" }, 'gD', lsp_buf.declaration, { buffer = buf, desc = "Declaration" })
+  map({ "n" }, 'gd', lsp_buf.definition, { buffer = buf, desc = "Definition" })
+  map({ "n" }, 'K', lsp_buf.hover, { buffer = buf, desc = "Hover document" })
+  map({ "n" }, 'gi', lsp_buf.implementation, { buffer = buf, desc = "Implementation" })
+  map({ "n" }, '<C-k>', lsp_buf.signature_help, { buffer = buf, desc = "Signature help" })
 
-    ["<space>"] = {
-      w = {
-        name = "Workspace",
-        a = { lsp_buf.add_workspace_folder, "Add workspace folder" },
-        r = { lsp_buf.remove_workspace_folder, "Remove workspace folder" },
-        l = {
-          function()
-            print(vim.inspect(lsp_buf.list_workspace_folders()))
-          end,
-          "List workspace folder"
-        }
-      },
-      D = { lsp_buf.type_definition, "Type definition" },
-      rn = { lsp_buf.rename, "Rename" },
-      ca = { lsp_buf.code_action, "Code action" },
-      gr = { lsp_buf.references, "References" },
-      f = {
-        function()
-          lsp_buf.format { async = true }
-        end,
-        "Format"
-      },
-      e = { diagnostic.open_float, "Diagnostic open" }
+  map({ "n" }, '<space>wa', lsp_buf.add_workspace_folder, { buffer = buf, desc = "Add workspace folder" })
+  map({ "n" }, '<space>wr', lsp_buf.remove_workspace_folder, { buffer = buf, desc = "Remove workspace folder" })
+  map({ "n" }, '<space>wl', function()
+    print(vim.inspect(lsp_buf.list_workspace_folders()))
+  end, { buffer = buf, desc = "List workspace folder" })
 
-    }
-  },
-
-  options = {
-    mode = { 'n' },
-    buffer = nil
-  }
-}
+  map({ "n" }, '<space>D', lsp_buf.type_definition, { buffer = buf, desc = "Type definition" })
+  map({ "n" }, '<space>rn', lsp_buf.rename, { buffer = buf, desc = "Rename" })
+  map({ "n" }, '<space>ca', lsp_buf.code_action, { buffer = buf, desc = "Code action" })
+  map({ "n" }, '<space>gr', lsp_buf.references, { buffer = buf, desc = "References" })
+  map({ "n" }, '<space>e', diagnostic.open_float, { buffer = buf, desc = "Diagnostic open" })
+  map({ "n" }, '<space>f', function()
+    lsp_buf.format({ async = true })
+  end, { buffer = buf, desc = "Format" })
+end
 
 return M
