@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  fetchFromGitHub,
   ...
 }:
 
@@ -58,8 +59,12 @@
   i18n = {
     defaultLocale = "en_US.UTF-8";
     inputMethod = {
-      enabled = "ibus";
-      ibus.engines = with pkgs.ibus-engines; [ bamboo ];
+      enable = true;
+      type = "ibus";
+      # ibus.engines = with pkgs.ibus-engines; [ bamboo ];
+      ibus.engines = with pkgs; [ 
+        (callPackage ./packages/ibus-bamboo.nix { })
+	  ];
     };
   };
 
@@ -71,13 +76,14 @@
       desktopManager.gnome = {
         enable = true;
         extraGSettingsOverridePackages = with pkgs; [ gnome.mutter ];
-        extraGSettingsOverrides = ''
-          [org.gnome.mutter]
-          dynamic-workspaces = true
-          edge-tiling = true
-          [org.gnome.desktop.wm.preferences]
-          button-layout = 'appmenu:minimize,maximize,close'
-        '';
+        # extraGSettingsOverrides = ''
+        #   [org.gnome.mutter]
+        #   dynamic-workspaces = true
+        #   edge-tiling = true
+        #   [org.gnome.desktop.wm.preferences]
+        #   button-layout = 'appmenu:minimize,maximize,close'
+        # '';
+		extraGSettingsOverrides = builtins.readFile ./gnome/gnome.toml;
       };
       excludePackages = with pkgs; [ xterm ];
     };
@@ -99,6 +105,8 @@
         # "${config.system.path}/lib/nautilus/extensions-4";
         # path for user
         "/etc/profiles/per-user/$USER/lib/nautilus/extensions-4";
+
+	  PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
     };
 
     # List packages installed in system profile.
@@ -134,15 +142,17 @@
       rustup
       lua-language-server
       nodePackages.nodejs
+	  openssl
+	  pkg-config
       # Gnome packages
       baobab
       loupe
       amberol
-      gnome.gnome-system-monitor
-      gnome.totem
-      gnome.file-roller
-      gnome.nautilus
-      gnome.nautilus-python
+      gnome-system-monitor
+      totem
+      file-roller
+      nautilus
+      nautilus-python
 	  # Gnome extensions
       gnomeExtensions.blur-my-shell
       gnomeExtensions.clipboard-indicator
@@ -186,5 +196,5 @@
 
   # For more information, see `man configuration.nix`
   # or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion.
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 }
