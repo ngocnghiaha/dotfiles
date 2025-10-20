@@ -1,44 +1,38 @@
 local M = {}
 
-local theme_integration = {
-  'blankline',
-  'bufferline',
-  'cmp',
-  'codeactionmenu',
-  'dashboard',
-  'defaults',
-  'devicons',
-  'float-window',
-  'git',
-  'lsp',
-  'lspsaga',
-  'noice',
-  'notify',
-  'semantic_tokens',
-  'syntax',
-  'telescope',
-  'todo',
-  'treesitter',
-  'trouble',
-  'vim-illuminate',
-  'whichkey',
-  'custom'
-
-}
-
 M.get_theme_tb = function(base_color)
-  local theme_name = vim.g.theme or "onedark-deep"
-  local theme_path = "base46.themes." .. theme_name
+  local theme_path = "base46.themes." .. vim.g.theme
   return require(theme_path)[base_color]
 end
 
 M.load_theme = function()
   local hl = vim.api.nvim_set_hl
+  local theme = require("base46.themes." .. vim.g.theme)
+  local handle = vim.uv.fs_scandir(vim.fn.stdpath('config') .. '/lua/base46/integrations')
+  local name, type
+  local module_name
 
-  for _, name in pairs(theme_integration) do
-    local highlight = require("base46.integrations." .. name)
-    for key, value in pairs(highlight) do
-      hl(0, key, value)
+  if not handle then return end
+
+  while true do
+    name, type = vim.uv.fs_scandir_next(handle)
+    if not name then break end
+    if type == 'file' and name:match('%.lua$') then
+      module_name = 'base46.integrations.' .. vim.fn.fnamemodify(name, ":t:r")
+      local ok, result = pcall(require, module_name)
+      if ok then
+        for key, value in pairs(result) do
+          hl(0, key, value)
+        end
+      end
+    end
+  end
+
+  if theme.polish_hl then
+    for _, highlight in pairs(theme.polish_hl) do
+      for key, value in pairs(highlight) do
+        hl(0, key, value)
+      end
     end
   end
 end

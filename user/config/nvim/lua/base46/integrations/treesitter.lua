@@ -1,6 +1,8 @@
 local theme = require("base46").get_theme_tb "base_16"
 local base30 = require("base46").get_theme_tb "base_30"
 
+local opts = require("nvconfig").base46
+
 return {
 
   ["@variable"] = { fg = theme.base05 },
@@ -12,7 +14,7 @@ return {
   ["@module"] = { fg = theme.base08 },
   -- ["@module.builtin"] = { fg = theme.base08 },
 
-  ["@constant"] = { fg = theme.base08 },
+  ["@constant"] = { fg = theme.base09 },
   ["@constant.builtin"] = { fg = theme.base09 },
   ["@constant.macro"] = { fg = theme.base08 },
 
@@ -21,6 +23,7 @@ return {
   ["@string.escape"] = { fg = theme.base0C },
   ["@character"] = { fg = theme.base08 },
   -- ["@character.special"] = { fg = theme.base08 },
+  ["@number"] = { fg = theme.base09 },
   ["@number.float"] = { fg = theme.base09 },
 
   ["@annotation"] = { fg = theme.base0F },
@@ -72,14 +75,15 @@ return {
   ["@markup.link.label"] = { fg = theme.base0C },
   ["@markup.list"] = { fg = theme.base08 },
   ["@markup.strong"] = { bold = true },
+  ["@markup.underline"] = { underline = true },
   ["@markup.italic"] = { italic = true },
   ["@markup.strikethrough"] = { strikethrough = true },
-  ["@markup.quote"] = { bg = base30.black2 },
+  ["@markup.quote"] = { bg = opts.transparency and nil or base30.black2 },
 
   ["@comment"] = { fg = base30.grey_fg },
   ["@comment.todo"] = { fg = base30.grey, bg = base30.white },
   ["@comment.warning"] = { fg = base30.black2, bg = theme.base09 },
-  ["@comment.note"] = { fg = base30.black2, bg = base30.white },
+  ["@comment.note"] = { fg = base30.black, bg = base30.blue },
   ["@comment.danger"] = { fg = base30.black2, bg = base30.red },
 
   ["@diff.plus"] = { fg = base30.green },

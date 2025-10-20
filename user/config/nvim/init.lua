@@ -1,3 +1,4 @@
-require("core.options")
+require("options")
 require("base46").setup()
-require ("plugins").setup()
+require("config.lazy")
+require("mappings")

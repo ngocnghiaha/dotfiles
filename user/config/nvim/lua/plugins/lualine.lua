@@ -1,5 +1,3 @@
-local M = {}
-
 local colors = require('base46').get_theme_tb("base_30")
 
 local lualine_theme = {
@@ -35,14 +33,19 @@ local lualine_theme = {
   },
 }
 
-M.setup = function()
-  require('lualine').setup {
+return {
+  'nvim-lualine/lualine.nvim',
+  dependencies = { 'nvim-tree/nvim-web-devicons' },
+  event = "VeryLazy",
+  opts = {
     options = {
+      disabled_filetypes = {
+        statusline = { 'snacks_dashboard', 'snacks_picker_list' },
+        -- winbar = { "snacks_dashboard" },
+      },
       theme = lualine_theme,
       component_separators = { left = '', right = '' },
       section_separators = { left = '', right = '' }
     },
   }
-end
-
-return M
+}
